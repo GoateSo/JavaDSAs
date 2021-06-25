@@ -1,6 +1,8 @@
 package structures.lists;
 
-public class LinkedList<T>{
+import java.util.Iterator;
+
+public class LinkedList<T> implements Iterable<T>{
     private class Node{
         T value;
         Node next;
@@ -38,7 +40,7 @@ public class LinkedList<T>{
         tail = cur;
     }
 
-    public void prepend(T x){
+    public void prep(T x){
         var h = new Node(x);
         h.next = head;
         head.prev = h;
@@ -46,7 +48,7 @@ public class LinkedList<T>{
         length++;
     }
 
-    public void append(T x){
+    public void add(T x){
         var h = new Node(x);
         h.prev = tail;
         tail.next = h;
@@ -54,4 +56,21 @@ public class LinkedList<T>{
         length++;
     }
 
+    @Override
+    public Iterator<T> iterator() {
+        return new Iterator<>() {
+            Node cur = head;
+            @Override
+            public boolean hasNext() {
+                return cur != null;
+            }
+
+            @Override
+            public T next() {
+                var val = cur.value;
+                cur = cur.next;
+                return val;
+            }
+        };
+    }
 }
