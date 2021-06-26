@@ -5,7 +5,7 @@ import structures.pqs.MaxHeap;
 import java.util.Arrays;
 
 public class Sorts {
-    int[] xs;
+    private final int[] xs;
     private static final int CUTOFF = 10;
 
     @Override

@@ -58,7 +58,14 @@ public class DynArray<T> implements Iterable<T> {
         System.out.println(xs.length+" "+this.xs.length);
         System.arraycopy(xs, 0, this.xs, 0, xs.length);
     }
-
+    /**
+     * creates a dynamic array with initial capacity equal to the next power of 2 > the length of the input
+     * @param xs array of values to insert
+     */
+    @SafeVarargs
+    public static <T> DynArray<T> of(T... xs){
+        return new DynArray<>(xs);
+    }
     /**
      * gets the ith element of the array
      * @param i index
@@ -149,17 +156,17 @@ public class DynArray<T> implements Iterable<T> {
         size += xs.length;
     }
 
-    @Override
-    public String toString() {
-        return Arrays.toString(xs).replaceAll(", null","");
-    }
-
     @SuppressWarnings("unchecked")
     private void resize(int newCap){
         T[] nxs = (T[]) new Object[newCap];
         capacity = newCap;
         System.arraycopy(xs, 0, nxs, 0, size);
         xs = nxs;
+    }
+
+    @Override
+    public String toString() {
+        return "Seq"+Arrays.toString(xs).replaceAll(", null","");
     }
 
     @Override
