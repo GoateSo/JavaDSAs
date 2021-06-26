@@ -1,7 +1,7 @@
-import algos.Sorts;
-import structures.lists.DynArray;
-import structures.lists.LinkedList;
+import algos.*;
+import structures.*;
 
+import java.util.Arrays;
 import java.util.Random;
 import java.util.function.Function;
 import java.util.stream.IntStream;
@@ -26,6 +26,12 @@ public class Main {
                         .toArray(Integer[]::new);
         // data structure tests
         stdout.println(DynArray.of(gen2.apply(10)));
-        stdout.println(LinkedList.of(2, 3, 4, 5, 6).get(0));
+        stdout.println(DynArray.of(1,2,3,4,5).equals(DynArray.of(1,2,4,5)));
+        stdout.println(LinkedList.of(1,2,3,4).equals(LinkedList.of(1,2,3,4)));
+        stdout.println(LinkedList.of(1,2,3,4).equals(LinkedList.of(1,2,3)));
+        int[] xs = {2,1,5,4,2,3,4,5,3,5,1,2,3,7,8,1,5,9};
+        var pair = Misc.threePartition(xs,0,xs.length-1);
+        stdout.println(Arrays.toString(xs));
+        stdout.println(pair);
     }
 }

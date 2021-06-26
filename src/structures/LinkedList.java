@@ -1,4 +1,4 @@
-package structures.lists;
+package structures;
 
 import java.util.Iterator;
 import java.util.NoSuchElementException;
@@ -7,25 +7,25 @@ import java.util.NoSuchElementException;
  *
  * @param <T> type of values in List
  */
-public class LinkedList<T> implements Iterable<T>{
+public class LinkedList<T> implements IList<T>{
 
-    private class Node{
+    private final class Node{
         T value;
         Node next;
         Node prev;
 
         public Node(T v){ value = v; }
     }
-    int length;
-    Node head;
-    Node tail;
+    private int length;
+    private Node head;
+    private Node last;
 
     /**
      * creates empty linked list;
      */
     public LinkedList(){
         length = 0;
-        head = tail = null;
+        head = last = null;
     }
 
     /**
@@ -43,7 +43,7 @@ public class LinkedList<T> implements Iterable<T>{
             n.prev = cur;
             cur = n;
         }
-        tail = cur;
+        last = cur;
     }
 
     /**
@@ -69,8 +69,8 @@ public class LinkedList<T> implements Iterable<T>{
      * gets the value at the end of the list
      * @return the tail of the list
      */
-    public T tail(){
-        return tail.value;
+    public T last(){
+        return last.value;
     }
 
     /**
@@ -79,23 +79,20 @@ public class LinkedList<T> implements Iterable<T>{
      * @return ith element
      */
     public T get(int i){
-        if (i < 0 || i >= length)
-            throw new NoSuchElementException("attempted to get element outside list bounds");
-        Node cur = head;
-        while (i-- > 0){ cur = cur.next; }
-        return cur.value;
+        var n = getNode(i);
+        return n.value;
     }
 
     public T peek(){
-        if (length < 1)
+        if (isEmpty())
             throw new NoSuchElementException("empty list has no head");
         return head.value;
     }
 
     public T peekLast(){
-        if (length < 1)
+        if (isEmpty())
             throw new NoSuchElementException("empty list has no tail");
-        return tail.value;
+        return last.value;
     }
 
     /**
@@ -103,14 +100,15 @@ public class LinkedList<T> implements Iterable<T>{
      * @return first element
      */
     public T pop(){
-        if (length < 1)
+        if (isEmpty())
             throw new NoSuchElementException("attempted to remove from empty list");
         var v =  head.value;
-        if (length == 1){ head = tail = null; }
+        if (length == 1){ head = last = null; }
         else{
             head = head.next;
             head.prev = null;
         }
+        length--;
         return v;
     }
 
@@ -119,25 +117,44 @@ public class LinkedList<T> implements Iterable<T>{
      * @return last element
      */
     public T popLast(){
-        if (length < 1)
+        if (isEmpty())
             throw new NoSuchElementException("attempted to remove from empty list");
-        var v = tail.value;
-        if (length == 1){ head = tail = null; }
+        var v = last.value;
+        if (length == 1){ head = last = null; }
         else{
-            tail = tail.prev;
-            tail.next = null;
+            last = last.prev;
+            last.next = null;
         }
+        length--;
         return v;
     }
 
+    public T remove(int i){
+        var node = getNode(i);
+        if (length == 1){ head = last = null; }
+        else{
+            Node n = node.next, p = node.prev;
+            if (n != null){
+                n.prev = node.prev;
+            }
+            if (p != null){
+                p.next = node.next;
+            }
+        }
+        length--;
+        return node.value;
+    }
     /**
      * checks whether the linked list is empty
      * @return a boolean representing whether the list is empty
      */
     public boolean isEmpty(){
-        return head == null;
+        return length == 0;
     }
 
+    public int size(){
+        return length;
+    }
     /**
      * prepends a value to the start of the list
      * @param x value to prepend
@@ -156,10 +173,36 @@ public class LinkedList<T> implements Iterable<T>{
      */
     public void add(T x){
         var h = new Node(x);
-        h.prev = tail;
-        tail.next = h;
-        tail = h;
+        h.prev = last;
+        last.next = h;
+        last = h;
         length++;
+    }
+
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        LinkedList<?> that = (LinkedList<?>) o;
+        if (length != that.length) return false;
+        var c1 = head;
+        var c2 = that.iterator();
+        boolean p = true;
+        while (c1 != null){
+            p = p && (c1.value.equals(c2.next()));
+            c1 = c1.next;
+        }
+        return p;
+    }
+
+    @Override
+    public int hashCode() {
+        int res = 1;
+        for (var x : this){
+            res = 31 * res + x.hashCode();
+        }
+        return res;
     }
 
     @Override
@@ -184,5 +227,13 @@ public class LinkedList<T> implements Iterable<T>{
                 return val;
             }
         };
+    }
+
+    private Node getNode(int i){
+        if (i < 0 || i >= length)
+            throw new NoSuchElementException("attempted to get element outside list bounds");
+        Node cur = head;
+        while (i-- > 0){ cur = cur.next; }
+        return cur;
     }
 }

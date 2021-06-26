@@ -1,6 +1,6 @@
-package structures.pqs;
+package structures;
 
-import structures.lists.DynArray;
+import structures.DynArray;
 
 /**
  * Maxheap implemented with resizing array
@@ -39,6 +39,18 @@ public class MaxHeap<T extends Comparable<T>> {
         for (int i = size/2; i >= 1; i--){
             sink(i);
         }
+    }
+
+    /**
+     * Builds binary heap from array of elements by copying all elements to the heap
+     * then sinking to map-heapify
+     * @param xs elements to build heap from
+     * @param <T> type of elements in heap
+     * @return a new maxheap
+     */
+    @SafeVarargs
+    public static <T extends Comparable<T>> MaxHeap<T> of(T... xs){
+        return new MaxHeap<>(xs);
     }
     /**
      * inserts element into maxheap

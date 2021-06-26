@@ -1,7 +1,8 @@
-package structures.lists;
+package structures;
 
 import java.util.Arrays;
 import java.util.Iterator;
+import java.util.Objects;
 
 /**
  * Dynamic array using a resizing array with lengths which are powers of two.
@@ -10,18 +11,11 @@ import java.util.Iterator;
  * trigger array resizing, nullifying the amortized constant time benefits.
  * @param <T> type of values in array
  */
-public class DynArray<T> implements Iterable<T> {
+public class DynArray<T> implements IList<T> {
     private T[] xs;
     private int size;
     private int capacity;
 
-    /**
-     * getter for array size
-     * @return the size of the dynamic array
-     */
-    public int size(){
-        return size;
-    }
     /**
      * creates an empty dynamic array with initial capacity 2
      */
@@ -67,6 +61,24 @@ public class DynArray<T> implements Iterable<T> {
     public static <T> DynArray<T> of(T... xs){
         return new DynArray<>(xs);
     }
+
+    /**
+     * checks whether the array is empty
+     * @return whether the array is empty
+     */
+    @Override
+    public boolean isEmpty() {
+        return size == 0;
+    }
+
+    /**
+     * getter for array size
+     * @return the size of the dynamic array
+     */
+    public int size(){
+        return size;
+    }
+
     /**
      * gets the ith element of the array
      * @param i index
@@ -114,7 +126,8 @@ public class DynArray<T> implements Iterable<T> {
      * @param x element to insert
      * @param i index to insert at
      */
-    public void insert(T x,int i){
+    @SuppressWarnings("ManualArrayCopy")
+    public void insert(T x, int i){
         //if (i < 0 || i > size) throw new ArrayIndexOutOfBoundsException();
         if (x == null) throw new NullPointerException("expected element to insert, got null instead");
         if (size >= capacity) resize(capacity * 2); //double size if full
@@ -153,7 +166,6 @@ public class DynArray<T> implements Iterable<T> {
         xs[--size] = null;
         return x;
     }
-
     /**
      * appends all elements of the array to the end of the underlying array.
      * Resizes to fit the array
@@ -178,6 +190,26 @@ public class DynArray<T> implements Iterable<T> {
     @Override
     public String toString() {
         return "Seq"+Arrays.toString(xs).replaceAll(", null","");
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        DynArray<?> dynArray = (DynArray<?>) o;
+        if (size != dynArray.size()) return false;
+        boolean p = true;
+        for (int i = 0; i < size; i++){
+            p = p && (xs[i] == dynArray.get(i));
+        }
+        return p;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = Objects.hash(size);
+        result = 31 * result + Arrays.hashCode(xs);
+        return result;
     }
 
     @Override

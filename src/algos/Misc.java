@@ -3,6 +3,7 @@ package algos;
 import java.util.Random;
 
 public class Misc {
+    private static record Pair(int fst,int snd) {}
     /**
      * Checks whether an index is in bounds of an array
      * @param xs array
@@ -20,7 +21,7 @@ public class Misc {
      */
     public static void swap(int[] xs, int i, int j) {
         //do nothing, but emit a warning
-        if (!inBounds(xs,i) && !inBounds(xs,j)) {
+        if (!(inBounds(xs,i) || inBounds(xs,j))) {
             System.out.println("attempted to swap with index outside the bounds of the array");
             return;
         }
@@ -33,10 +34,37 @@ public class Misc {
      * @param xs arbitrary array of values
      */
     public static void shuffle(int[] xs){
-        var rand = new Random(System.nanoTime());
+        var rand = new Random();
         for (int i = 0; i < xs.length - 2; i++){
             int j = rand.nextInt(xs.length-i)+i;
             swap(xs,i,j);
         }
+    }
+
+    /**
+     * Partitions an array of integers in accordance with Dijkstra's method
+     * in the dutch national flag problem.
+     * @param xs array to partition
+     * @param lo start of subarray
+     * @param hi end of subarray
+     * @return the start and end of the subarray of values equal to the partitioning element
+     */
+    public static Pair threePartition(int[] xs, int lo, int hi){
+        if (hi-lo < 2) return new Pair(lo,hi);
+        int lt = lo, i = lo;
+        int gt = hi;
+        int pivot = xs[0];
+        while (i <= gt){
+            int x = xs[i];
+            if (x < pivot) {
+                swap(xs, i, lt);
+                lt++;
+                i++;
+            } else if(x > pivot){
+                swap(xs, i, gt);
+                gt--;
+            } else { i++; }
+        }
+        return new Pair(lt,gt);
     }
 }

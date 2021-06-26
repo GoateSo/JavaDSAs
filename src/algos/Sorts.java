@@ -1,6 +1,6 @@
 package algos;
 
-import structures.pqs.MaxHeap;
+import structures.MaxHeap;
 
 import java.util.Arrays;
 
@@ -113,7 +113,7 @@ public class Sorts {
         return this;
     }
     /**
-     * rather naive heapsort which creates an auxiliary heap (defined in {@link structures.pqs.MaxHeap}) and array (jvm boxing) in order to sort the array.
+     * rather naive heapsort which creates an auxiliary heap (defined in {@link structures.MaxHeap}) and array (jvm boxing) in order to sort the array.
      * Access to the private fields of the maxheap itself would allow for faster runtime and less memory used on
      * auxiliaries, although doing so in MaxHeap/DynArray would be unsafe and rigid, disallowing shrinkage
      * and showing implementation detail.
