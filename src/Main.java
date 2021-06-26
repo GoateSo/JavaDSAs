@@ -26,7 +26,6 @@ public class Main {
                         .toArray(Integer[]::new);
         // data structure tests
         stdout.println(DynArray.of(gen2.apply(10)));
-        stdout.println(LinkedList.of(2, 3, 4, 5, 6));
-
+        stdout.println(LinkedList.of(2, 3, 4, 5, 6).get(0));
     }
 }

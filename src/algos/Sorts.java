@@ -32,7 +32,6 @@ public class Sorts {
             }
         }
     }
-
     /**
      * Standard implementation of insertion sort which compares with previous element and swaps
      * possible optimizations are to binary search for position due to loop invariant,
@@ -72,7 +71,6 @@ public class Sorts {
         mergeSort(m+1,hi);//sort right subarray
         merge(lo,m,hi);
     }
-
     /**
      * rather naive mergesort which creates 2 sub-arrays upon each merge operation
      * possible optimizations being to use insertion sort on small sub-arrays
@@ -85,7 +83,7 @@ public class Sorts {
     }
     //hoare partition
     @SuppressWarnings("StatementWithEmptyBody")
-    public int partition(int lo, int hi){
+    private int partition(int lo, int hi){
         int i = lo, j = hi+1;
         var pivot = xs[lo];
         while (true){
@@ -115,7 +113,7 @@ public class Sorts {
         return this;
     }
     /**
-     * rather naive heapsort which creates an auxiliary heap and array (jvm boxing) in order to sort the array.
+     * rather naive heapsort which creates an auxiliary heap (defined in {@link structures.pqs.MaxHeap}) and array (jvm boxing) in order to sort the array.
      * Access to the private fields of the maxheap itself would allow for faster runtime and less memory used on
      * auxiliaries, although doing so in MaxHeap/DynArray would be unsafe and rigid, disallowing shrinkage
      * and showing implementation detail.

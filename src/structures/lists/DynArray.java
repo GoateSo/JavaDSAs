@@ -55,12 +55,13 @@ public class DynArray<T> implements Iterable<T> {
         capacity = 1 << (int)(Math.log(xs.length)/Math.log(2)+1);
         size = xs.length;
         this.xs = (T[]) new Object[capacity];
-        System.out.println(xs.length+" "+this.xs.length);
         System.arraycopy(xs, 0, this.xs, 0, xs.length);
     }
     /**
      * creates a dynamic array with initial capacity equal to the next power of 2 > the length of the input
      * @param xs array of values to insert
+     * @param <T> type of values to insert
+     * @return a dynamic array with the given values
      */
     @SafeVarargs
     public static <T> DynArray<T> of(T... xs){
@@ -76,11 +77,21 @@ public class DynArray<T> implements Iterable<T> {
         return xs[i];
     }
 
+    /**
+     * sets an index within the array to a value
+     * @param i index
+     * @param v new value
+     */
     public void set(int i, T v){
         //if (i < 0 || i >= xs.length) throw new ArrayIndexOutOfBoundsException();
         xs[i] = v;
     }
 
+    /**
+     * swaps two indexes within the array
+     * @param i first index
+     * @param j second index
+     */
     public void swap(int i, int j){
         T temp = xs[i];
         xs[i] = xs[j];
