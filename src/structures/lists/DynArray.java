@@ -1,8 +1,12 @@
-package structures;
+package structures.lists;
 
 import java.util.Arrays;
 import java.util.Iterator;
+import java.util.NoSuchElementException;
 import java.util.Objects;
+import java.util.function.BiFunction;
+import java.util.function.Function;
+import java.util.function.Predicate;
 
 /**
  * Dynamic array using a resizing array with lengths which are powers of two.
@@ -24,6 +28,19 @@ public class DynArray<T> implements IList<T> {
         xs = (T[]) new Object[2];
         capacity = 2;
         size = 0;
+    }
+    /**
+     * creates an empty dynamic array with initial capacity greater or equal to the given length
+     * @param len length
+     */
+    @SuppressWarnings("unchecked")
+    public DynArray(int len){
+        capacity = 1 << (int)(Math.log(len)/Math.log(2)+1);
+        size = 0;
+        xs = (T[]) new Object[capacity];
+//        for (int i = 0;i < len;  i++){
+//            xs[i] = null;
+//        }
     }
     /**
      * creates a dynamic array with initial size len filled with a default value
@@ -122,6 +139,80 @@ public class DynArray<T> implements IList<T> {
     }
 
     /**
+     * maps an operation on all elements of the list and returns the resulting list
+     *
+     * @param f function to apply
+     * @return new list
+     */
+    @Override
+    public <U> IList<U> map(Function<T, U> f) {
+        var arr = new DynArray<U>(capacity);
+        for (var x : this)
+            arr.add(f.apply(x));
+        return arr;
+    }
+
+    /**
+     * maps an operation on all elements of the list and flattens the resulting list before returning it
+     *
+     * @param f function to apply
+     * @return new list
+     */
+    @Override
+    public <U> DynArray<U> flatMap(Function<T, ? extends IList<U>> f) {
+        var arr = new DynArray<U>(capacity);
+        for (var elem : this)
+            for (var nelem : f.apply(elem))
+                arr.add(nelem);
+        return arr;
+    }
+
+    /**
+     * returns a list of all elements of the previous list which fulfill a given predicate
+     *
+     * @param pred given predicate
+     * @return new list
+     */
+    @Override
+    public IList<T> filter(Predicate<T> pred) {
+        var arr = new DynArray<T>();
+        for (var x : this)
+            if (pred.test(x))
+                arr.add(x);
+        return arr;
+    }
+
+    /**
+     * reduces a list with a binary operation and an initial value going from left to right
+     *
+     * @param init initial value
+     * @param f    binary operation to apply
+     * @return result of reduction
+     */
+    @Override
+    public <U> U foldl(U init, BiFunction<U, T, U> f) {
+        for (var x : this)
+            init = f.apply(init,x);
+        return init;
+    }
+
+    /**
+     * reduces a list using its first element as the initial value, erroring if empty
+     *
+     * @param f binary operation to apply
+     * @return result of reduction
+     */
+    @Override
+    public T reduce(BiFunction<T, T, T> f) {
+        if (size < 1) throw new NoSuchElementException();
+        var init = xs[0];
+        for (int i = 1; i < size; i++) {
+            init = f.apply(init, xs[i]);
+        }
+        return init;
+    }
+
+    /**
      * inserts an element in an arbitrary index within the array
      * @param x element to insert
      * @param i index to insert at
@@ -166,12 +257,27 @@ public class DynArray<T> implements IList<T> {
         xs[--size] = null;
         return x;
     }
+
+    /**
+     * moves all elements which fulfill a given predicate
+     * @param pred predicate to fulfill
+     */
+    @Override
+    public void removeAll(Predicate<T> pred){
+        for (int i = size-1; i >= 0; i-- ){
+            if (pred.test(xs[i])){
+                remove(i);
+                i--;
+            }
+        }
+    }
     /**
      * appends all elements of the array to the end of the underlying array.
      * Resizes to fit the array
      * @param xs array to append
      */
-    public void append(T[] xs){
+    @SafeVarargs
+    public final void addAll(T... xs){
         int newCap = capacity;
         while(xs.length + size > newCap) newCap *= 2; //double new capacity until it can fit the other array
         resize(newCap);
