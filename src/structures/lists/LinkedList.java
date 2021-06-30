@@ -1,13 +1,16 @@
-package structures;
+package structures.lists;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Iterator;
 import java.util.NoSuchElementException;
+import java.util.function.*;
 
 /**
  *
  * @param <T> type of values in List
  */
-public class LinkedList<T> implements IList<T>{
+public final class LinkedList<T> implements IList<T>{
 
     private final class Node{
         T value;
@@ -21,19 +24,16 @@ public class LinkedList<T> implements IList<T>{
     private Node last;
 
     /**
-     * creates empty linked list;
-     */
-    public LinkedList(){
-        length = 0;
-        head = last = null;
-    }
-
-    /**
      * creates a linked list with a given list of elements
      * @param xs list of elements to insert into list
      */
     @SafeVarargs
     public LinkedList(T... xs){
+        if (xs.length == 0) {
+            length = 0;
+            head = last = null;
+            return;
+        }
         head = new Node(xs[0]);
         length = xs.length;
         Node cur = head;
@@ -62,6 +62,8 @@ public class LinkedList<T> implements IList<T>{
      * @return the head of the list
      */
     public T head(){
+        if (isEmpty())
+            throw new NoSuchElementException("empty list has no head");
         return head.value;
     }
 
@@ -70,6 +72,8 @@ public class LinkedList<T> implements IList<T>{
      * @return the tail of the list
      */
     public T last(){
+        if (isEmpty())
+            throw new NoSuchElementException("empty list has no tail");
         return last.value;
     }
 
@@ -83,22 +87,29 @@ public class LinkedList<T> implements IList<T>{
         return n.value;
     }
 
+    /**
+     * returns the first element of the list
+     * @return the first element in the list
+     * @see #head
+     */
     public T peek(){
-        if (isEmpty())
-            throw new NoSuchElementException("empty list has no head");
-        return head.value;
+        return head();
     }
 
+    /**
+     * returns the last element of the list
+     * @return the last element in the list
+     * @see #last
+     */
     public T peekLast(){
-        if (isEmpty())
-            throw new NoSuchElementException("empty list has no tail");
-        return last.value;
+        return last();
     }
 
     /**
      * removes first element from linked list and returns it;
      * @return first element
      */
+    @Override
     public T pop(){
         if (isEmpty())
             throw new NoSuchElementException("attempted to remove from empty list");
@@ -129,32 +140,51 @@ public class LinkedList<T> implements IList<T>{
         return v;
     }
 
+    /**
+     * removes the ith element in the list, and returns it
+     * @param i index
+     * @return ith element
+     */
+    @Override
     public T remove(int i){
         var node = getNode(i);
-        if (length == 1){ head = last = null; }
-        else{
-            Node n = node.next, p = node.prev;
-            if (n != null){
-                n.prev = node.prev;
-            }
-            if (p != null){
-                p.next = node.next;
-            }
-        }
-        length--;
+        removeNode(node);
         return node.value;
     }
+
+    /**
+     * moves all elements which fulfill a given predicate
+     * @param pred predicate to fulfill
+     */
+    @Override
+    public void removeAll(Predicate<T> pred) {
+        Node cur = head;
+        while (cur != null){
+            if (pred.test(cur.value)){
+                removeNode(cur);
+            }
+            cur = cur.next;
+        }
+    }
+
     /**
      * checks whether the linked list is empty
      * @return a boolean representing whether the list is empty
      */
+    @Override
     public boolean isEmpty(){
         return length == 0;
     }
 
+    /**
+     * gives the size of the list
+     * @return the size of the list
+     */
+    @Override
     public int size(){
         return length;
     }
+
     /**
      * prepends a value to the start of the list
      * @param x value to prepend
@@ -171,12 +201,92 @@ public class LinkedList<T> implements IList<T>{
      * appends a value to the end of the list
      * @param x value to append
      */
+    @Override
     public void add(T x){
-        var h = new Node(x);
-        h.prev = last;
-        last.next = h;
-        last = h;
+        if (isEmpty()){
+            head = last = new Node(x);
+        }else{
+            var h = new Node(x);
+            h.prev = last;
+            last.next = h;
+            last = h;
+        }
         length++;
+    }
+
+    /**
+     * maps an operation on all elements of the list and returns the resulting list
+     *
+     * @param f function to apply
+     * @return new list
+     */
+    @Override
+    public <U> LinkedList<U> map(Function<T, U> f) {
+        var ret = new LinkedList<U>();
+        for (var x : this)
+            ret.add(f.apply(x));
+        return ret;
+    }
+
+    /**
+     * maps an operation on all elements of the list and flattens the resulting list before returning it
+     *
+     * @param f function to apply
+     * @return new list
+     */
+    @Override
+    public <U> LinkedList<U> flatMap(Function<T, ? extends IList<U>> f) {
+        var ret = new LinkedList<U>();
+        for (var elem : this)
+            for (var newElem : f.apply(elem))
+                ret.add(newElem);
+        return ret;
+    }
+
+    /**
+     * returns a list of all elements of the previous list which fulfill a given predicate
+     *
+     * @param pred given predicate
+     * @return new list
+     */
+    @Override
+    public LinkedList<T> filter(Predicate<T> pred) {
+        var ret = new LinkedList<T>();
+        for (var x : this)
+            if (pred.test(x))
+                ret.add(x);
+        return ret;
+    }
+
+    /**
+     * reduces a list with a binary operation and an initial value going from left to right
+     *
+     * @param init initial value
+     * @param f    binary operation to apply
+     * @return result of reduction
+     */
+    @Override
+    public <U> U foldl(U init, BiFunction<U, T, U> f) {
+        for (var x : this)
+            init = f.apply(init,x);
+        return init;
+    }
+
+    /**
+     * reduces a list using its first element as the initial value, errors if empty
+     *
+     * @param f binary operation to apply
+     * @return result of reduction
+     */
+    @Override
+    public T reduce(BiFunction<T, T, T> f) {
+        var accum = head.value;
+        var cur = head.next;
+        while (cur != null){
+            accum = f.apply(accum,cur.value);
+            cur = cur.next;
+        }
+        return accum;
     }
 
 
@@ -217,7 +327,7 @@ public class LinkedList<T> implements IList<T>{
         return ret.append("]").toString();
     }
 
-    @Override public Iterator<T> iterator() {
+    @Override public @NotNull Iterator<T> iterator() {
         return new Iterator<>() {
             Node cur = head;
             @Override public boolean hasNext() { return cur != null; }
@@ -229,6 +339,25 @@ public class LinkedList<T> implements IList<T>{
         };
     }
 
+    private void removeNode(Node node){
+        if (length == 1){ head = last = null; }
+        else{
+            Node n = node.next, p = node.prev;
+            if (n != null){
+                n.prev = node.prev;
+            }
+            if (p != null){
+                p.next = node.next;
+            }
+            if (node == head){
+                head = n;
+            }
+            if (node == last){
+                last = p;
+            }
+        }
+        length--;
+    }
     private Node getNode(int i){
         if (i < 0 || i >= length)
             throw new NoSuchElementException("attempted to get element outside list bounds");
