@@ -1,6 +1,6 @@
-package structures;
+package structures.pqs;
 
-import structures.DynArray;
+import structures.lists.DynArray;
 
 /**
  * Maxheap implemented with resizing array
@@ -35,7 +35,7 @@ public class MaxHeap<T extends Comparable<T>> {
     @SafeVarargs
     public MaxHeap(T... xs){
         size = xs.length;
-        (this.xs = new DynArray<>(1,null)).append(xs);
+        (this.xs = new DynArray<>(1,null)).addAll(xs);
         for (int i = size/2; i >= 1; i--){
             sink(i);
         }
