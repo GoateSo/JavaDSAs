@@ -190,6 +190,7 @@ public final class LinkedList<T> implements IList<T>{
      * @param x value to prepend
      */
     public void prep(T x){
+        if (x == null) return;
         var h = new Node(x);
         h.next = head;
         head.prev = h;
@@ -203,6 +204,7 @@ public final class LinkedList<T> implements IList<T>{
      */
     @Override
     public void add(T x){
+        if (x == null) return;
         if (isEmpty()){
             head = last = new Node(x);
         }else{

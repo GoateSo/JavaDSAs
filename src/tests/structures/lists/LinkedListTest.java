@@ -165,7 +165,9 @@ class LinkedListTest {
                 Arguments.of(LinkedList.of(1), 1, LinkedList.of(1,1)),
                 Arguments.of(LinkedList.of(1,2), 2, LinkedList.of(2,1,2)),
                 Arguments.of(LinkedList.of(1,2,3), 3,LinkedList.of(3,1,2,3)),
-                Arguments.of(LinkedList.of(1,6,7,8,9), 9, LinkedList.of(9,1,6,7,8,9))
+                Arguments.of(LinkedList.of(1,6,7,8,9), 9, LinkedList.of(9,1,6,7,8,9)),
+                Arguments.of(LinkedList.of(), null, LinkedList.of()),
+                Arguments.of(LinkedList.of(1,2,3), null, LinkedList.of(1,2,3))
         );
     }
     @ParameterizedTest(name="# {index}- Test {0}.prep({1}), expecting {2}")
@@ -180,7 +182,9 @@ class LinkedListTest {
                 Arguments.of(LinkedList.of(1), 1, LinkedList.of(1,1)),
                 Arguments.of(LinkedList.of(1,2), 2, LinkedList.of(1,2,2)),
                 Arguments.of(LinkedList.of(1,2,3), 3,LinkedList.of(1,2,3,3)),
-                Arguments.of(LinkedList.of(1,6,7,8,7), 9, LinkedList.of(1,6,7,8,7,9))
+                Arguments.of(LinkedList.of(1,6,7,8,7), 9, LinkedList.of(1,6,7,8,7,9)),
+                Arguments.of(LinkedList.of(), null, LinkedList.of()),
+                Arguments.of(LinkedList.of(1,2,3), null, LinkedList.of(1,2,3))
         );
     }
 
@@ -289,7 +293,7 @@ class LinkedListTest {
                 Arguments.of(LinkedList.of(), (Predicate<Integer>)(i -> true), true, "p: x -> anything"),
                 Arguments.of(LinkedList.of(1,2,3), (Predicate<Integer>)(i -> i > 0), true, "p: x -> x > 0"),
                 Arguments.of(LinkedList.of(1,2,3,-1), (Predicate<Integer>)(i -> i > 0), false, "p: x -> x > 0"),
-                Arguments.of(LinkedList.of(1,2,3), (Predicate<Integer>)(i -> i > 0), false, "p: x -> x > 0"),
+                Arguments.of(LinkedList.of(1,2,3), (Predicate<Integer>)(i -> i > 0), true, "p: x -> x > 0"),
                 Arguments.of(LinkedList.of(-1,1,2,3), (Predicate<Integer>)(i -> i > 0), false, "p: x -> x > 0"),
                 Arguments.of(LinkedList.of(1,2,-1,3), (Predicate<Integer>)(i -> i > 0), false, "p: x -> x > 0")
         );
