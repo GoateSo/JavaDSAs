@@ -2,11 +2,13 @@ package structures.queues;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
 /**
  * resizing array implemented queue to achieve all queue operations in amortized constant time
+ *
  * @param <T> type of elements in ArrayQueue
  */
 public class ArrayQueue<T> implements Queue<T> {
@@ -20,17 +22,18 @@ public class ArrayQueue<T> implements Queue<T> {
     @SafeVarargs
     @SuppressWarnings("unchecked")
     public ArrayQueue(T... xs) {
-        int cap =  1 << (int)(Math.log(xs.length)/Math.log(2)+1);
+        int cap = 1 << (int) (Math.log(xs.length) / Math.log(2) + 1);
         arr = (T[]) new Object[cap];
         System.arraycopy(xs, 0, arr, 0, xs.length);
         capacity = cap;
         size = xs.length;
         head = 0;
-        tail = size-1;
+        tail = size - 1;
     }
 
     /**
      * inserts an element at the end of the queue
+     *
      * @param elem element to insert
      */
     @Override
@@ -46,6 +49,7 @@ public class ArrayQueue<T> implements Queue<T> {
 
     /**
      * checks whether the queue is empty
+     *
      * @return whether the queue is empty
      */
     @Override
@@ -55,14 +59,15 @@ public class ArrayQueue<T> implements Queue<T> {
 
     /**
      * removes an element from the front of the queue
+     *
      * @return the front queue element
      */
     @Override
     public T dequeue() {
         if (isEmpty())
             throw new NoSuchElementException();
-        if (size <= capacity/4)
-            resize(capacity/2);
+        if (size <= capacity / 4)
+            resize(capacity / 2);
         T elem = arr[head];
         arr[head] = null;
         size--;
@@ -72,6 +77,7 @@ public class ArrayQueue<T> implements Queue<T> {
 
     /**
      * gets the element at the front of the queue
+     *
      * @return the element at the front of the queue
      */
     @Override
@@ -83,6 +89,7 @@ public class ArrayQueue<T> implements Queue<T> {
 
     /**
      * Returns an iterator over elements of type {@code T}.
+     *
      * @return an Iterator.
      */
     @SuppressWarnings("unchecked")
@@ -90,11 +97,12 @@ public class ArrayQueue<T> implements Queue<T> {
     @Override
     public Iterator<T> iterator() {
         T[] xs = (T[]) new Object[size];
-        for (int i = 0; i < size; i++){
-            xs[i] = arr[(head + i)%capacity];
+        for (int i = 0; i < size; i++) {
+            xs[i] = arr[(head + i) % capacity];
         }
         return new Iterator<>() {
             private int i = 0;
+
             @Override
             public boolean hasNext() {
                 return i < xs.length;
@@ -110,8 +118,8 @@ public class ArrayQueue<T> implements Queue<T> {
     @SuppressWarnings("unchecked")
     private void resize(int newCap) {
         T[] nArr = (T[]) new Object[newCap];
-        int x=0;
-        for (int i = head; i < head + size; i++){
+        int x = 0;
+        for (int i = head; i < head + size; i++) {
             nArr[x] = arr[i % capacity];
             x++;
         }
@@ -119,5 +127,10 @@ public class ArrayQueue<T> implements Queue<T> {
         tail = size;
         capacity = newCap;
         arr = nArr;
+    }
+
+    @Override
+    public String toString() {
+        return Arrays.toString(arr);
     }
 }

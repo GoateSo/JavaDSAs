@@ -4,8 +4,10 @@ import org.jetbrains.annotations.NotNull;
 import structures.lists.LinkedList;
 
 import java.util.Iterator;
+
 /**
  * wrapper over LinkedList which only exposes stack methods
+ *
  * @param <T> type of value in ListStack
  */
 public class ListStack<T> implements Stack<T> {
@@ -55,5 +57,11 @@ public class ListStack<T> implements Stack<T> {
     @Override
     public Iterator<T> iterator() {
         return list.iterator();
+    }
+
+
+    @Override
+    public String toString() {
+        return list.toString();
     }
 }

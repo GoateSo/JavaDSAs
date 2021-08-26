@@ -50,6 +50,13 @@ public interface IList<T> extends Iterable<T>{
      */
     void add(T v);
 
+    /**
+     * checks whether the list contains a given value
+     * @param v value
+     * @return whether the list contains the value
+     */
+    boolean contains(T v);
+
     //combinators and sequencers
 
     /**

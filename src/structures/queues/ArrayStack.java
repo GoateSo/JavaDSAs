@@ -7,6 +7,7 @@ import java.util.Iterator;
 
 /**
  * wrapper over DynArray which only exposes stack methods
+ *
  * @param <T> type of value in array stack
  */
 public class ArrayStack<T> implements Stack<T> {
@@ -14,7 +15,7 @@ public class ArrayStack<T> implements Stack<T> {
 
     @SafeVarargs
     public ArrayStack(T... xs) {
-        arr =  DynArray.of(xs);
+        arr = DynArray.of(xs);
     }
 
     /**
@@ -69,5 +70,10 @@ public class ArrayStack<T> implements Stack<T> {
     @Override
     public Iterator<T> iterator() {
         return arr.iterator();
+    }
+
+    @Override
+    public String toString() {
+        return arr.toString();
     }
 }

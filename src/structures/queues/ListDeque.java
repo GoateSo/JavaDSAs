@@ -7,13 +7,15 @@ import java.util.Iterator;
 
 public class ListDeque<T> implements Deque<T> {
     private LinkedList<T> list;
+
     @SafeVarargs
-    public ListDeque(T... xs){
-         list = LinkedList.of(xs);
+    public ListDeque(T... xs) {
+        list = LinkedList.of(xs);
     }
 
     /**
      * checks if the deque is empty
+     *
      * @return whether the deque is empty
      */
     @Override
@@ -23,38 +25,43 @@ public class ListDeque<T> implements Deque<T> {
 
     /**
      * adds element to front to deque
+     *
      * @param elem element to add
      */
-    public void addFirst(T elem){
+    public void addFirst(T elem) {
         list.prep(elem);
     }
-    
+
     /**
      * adds element to rear to deque
+     *
      * @param elem element to add
      */
-    public void addLast(T elem){
+    public void addLast(T elem) {
         list.add(elem);
     }
 
     /**
      * removes element from front of deque
+     *
      * @return front element
      */
-    public T removeFirst(){
+    public T removeFirst() {
         return list.pop();
     }
 
     /**
      * removes element from rear of deque
+     *
      * @return last element
      */
-    public T removeLast(){
+    public T removeLast() {
         return list.popLast();
     }
 
     /**
      * peeks at last element, akin to stack peek
+     *
      * @return last element
      */
     @Override
@@ -64,6 +71,7 @@ public class ListDeque<T> implements Deque<T> {
 
     /**
      * peeks at first element, akin to Queue peek
+     *
      * @return first element
      */
     @Override
@@ -73,6 +81,7 @@ public class ListDeque<T> implements Deque<T> {
 
     /**
      * inserts an element at the end of the queue
+     *
      * @param elem element to insert
      */
     @Override
@@ -82,6 +91,7 @@ public class ListDeque<T> implements Deque<T> {
 
     /**
      * removes an element from the front of the deque
+     *
      * @return the front queue element
      * @see #removeFirst
      */
@@ -92,6 +102,7 @@ public class ListDeque<T> implements Deque<T> {
 
     /**
      * pushes an element to the end (top) of the deque
+     *
      * @param elem element to push
      * @see #removeFirst
      */
@@ -102,6 +113,7 @@ public class ListDeque<T> implements Deque<T> {
 
     /**
      * removes and returns the last element of deque (top)
+     *
      * @return the top of the stack
      * @see #removeLast
      */
@@ -119,5 +131,10 @@ public class ListDeque<T> implements Deque<T> {
     @Override
     public Iterator<T> iterator() {
         return list.iterator();
+    }
+
+    @Override
+    public String toString() {
+        return list.toString();
     }
 }

@@ -5,7 +5,7 @@ import structures.lists.LinkedList;
 
 import java.util.Iterator;
 
-public class ListQueue<T> implements Queue<T>{
+public class ListQueue<T> implements Queue<T> {
     private LinkedList<T> list;
 
     @SafeVarargs
@@ -35,6 +35,7 @@ public class ListQueue<T> implements Queue<T>{
 
     /**
      * removes an element from the front of the queue
+     *
      * @return the front queue element
      */
     @Override
@@ -44,6 +45,7 @@ public class ListQueue<T> implements Queue<T>{
 
     /**
      * gets the element at the front of the queue
+     *
      * @return the element at the front of the queue
      */
     @Override
@@ -53,11 +55,17 @@ public class ListQueue<T> implements Queue<T>{
 
     /**
      * Returns an iterator over elements of type {@code T}.
+     *
      * @return an Iterator.
      */
     @NotNull
     @Override
     public Iterator<T> iterator() {
         return list.iterator();
+    }
+
+    @Override
+    public String toString() {
+        return list.toString();
     }
 }
