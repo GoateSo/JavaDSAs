@@ -20,12 +20,16 @@ public class Counting {
         if (max - min > xs.length * 32) // arbitrary bound for warning
             System.out.println("maximum range of values far exceeds length of array, consider using an alternative sorting method");
 
+        // fill count array with # of occurrences
         for (var x : xs)
             count[x - min + 1]++;
+        // add for indices
         for (int i = 1; i < count.length; i++)
             count[i] += count[i - 1];
+        // using those indices to create sorted temp array
         for (var x : xs)
             temp[count[x - min]++] = x;
+        // copy values back to original array
         System.arraycopy(temp, 0, xs, 0, xs.length);
         return xs;
     }

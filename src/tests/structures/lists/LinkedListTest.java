@@ -79,7 +79,8 @@ class LinkedListTest {
                 Arguments.of(LinkedList.of(1), 0, LinkedList.of(), 1),
                 Arguments.of(LinkedList.of(5, 2), 1, LinkedList.of(5), 2),
                 Arguments.of(LinkedList.of(1, 2, 3), 1, LinkedList.of(1, 3), 2),
-                Arguments.of(LinkedList.of(4, 7, 8, 9, 6, 7), 2, LinkedList.of(4, 7, 9, 6, 7), 8)
+                Arguments.of(LinkedList.of(4, 7, 8, 9, 6, 7), 2, LinkedList.of(4, 7, 9, 6, 7), 8),
+                Arguments.of(LinkedList.of(4,5,4,2),3,LinkedList.of(4,5,4),2)
         );
     }
 

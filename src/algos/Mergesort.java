@@ -2,13 +2,14 @@ package algos;
 
 public class Mergesort {
     // merge subroutine, which merges two sorted subsections
-    private static void merge(int[] xs, int lo, int mid, int hi) {
+    protected static void merge(int[] xs, int lo, int mid, int hi) {
         //[1,2,3,4,1,3,4,5]
         // l     m       h
         // length(left) = m-l+1
         // length(right = h-(m+1)+1 = h-m
         int ll = mid - lo + 1, lr = hi - mid;
-        int[] left = new int[ll], right = new int[lr];
+        int[] left = new int[ll];
+        int[] right = new int[lr];
         System.arraycopy(xs, lo, left, 0, ll);
         System.arraycopy(xs, mid + 1, right, 0, lr);
 

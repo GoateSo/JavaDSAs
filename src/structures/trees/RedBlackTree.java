@@ -81,7 +81,7 @@ public class RedBlackTree<K extends Comparable<K>, V> implements BinTree<K,V> {
         root.color = Black;
     }
 
-    // from Algorithms 4th edition
+    // from Sedgewick's Algorithms 4th edition
     private Node insert(Node h, K key, V val){
         // standard bst insertion first
         //System.out.println(h);

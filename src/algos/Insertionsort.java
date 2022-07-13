@@ -1,7 +1,7 @@
 package algos;
 
 public class Insertionsort {
-    private static void insertionSort(int[] xs, int lo, int hi){
+    protected static void sort(int[] xs, int lo, int hi){
         for (int i = lo + 1; i <= hi; i++){
             int ind = i ;
             int x = xs[i];
@@ -18,6 +18,6 @@ public class Insertionsort {
      * @param xs array to sort
      */
     public static void sort(int[] xs){
-        insertionSort(xs,0,xs.length-1);
+        sort(xs,0,xs.length-1);
     }
 }
